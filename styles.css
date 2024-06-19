@@ -1,17 +1,19 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     margin: 0;
-    padding: 0;
 }
 
 .container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
     background: #fff;
+    padding: 20px;
+    border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-top: 50px;
+    width: 300px;
 }
 
 h1 {
@@ -24,62 +26,61 @@ form {
     margin-bottom: 20px;
 }
 
-form input, form button {
-    padding: 10px;
-    font-size: 16px;
+input[type="text"] {
+    width: 70%;
+    padding: 5px;
 }
 
-form input {
-    width: 80%;
-}
-
-form button {
-    background-color: #28a745;
-    color: white;
+button {
+    width: 25%;
+    padding: 5px;
+    background: #28a745;
+    color: #fff;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
 }
 
-form button:hover {
-    background-color: #218838;
+button:hover {
+    background: #218838;
 }
 
 ul {
-    list-style: none;
+    list-style-type: none;
     padding: 0;
 }
 
 li {
-    padding: 10px;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    background: #f9f9f9;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-button.edit, button.delete {
-    padding: 5px 10px;
+li .actions {
+    display: flex;
+    gap: 10px;
+}
+
+li .actions button {
+    background: #dc3545;
+    color: #fff;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    margin-left: 10px;
 }
 
-button.edit {
-    background-color: #ffc107;
-    color: white;
+li .actions button:hover {
+    background: #c82333;
 }
 
-button.delete {
-    background-color: #dc3545;
-    color: white;
+li .actions .edit {
+    background: #ffc107;
 }
 
-button.edit:hover {
-    background-color: #e0a800;
-}
-
-button.delete:hover {
-    background-color: #c82333;
+li .actions .edit:hover {
+    background: #e0a800;
 }

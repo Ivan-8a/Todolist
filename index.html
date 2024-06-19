@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Tareas</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de Tareas</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-    <div class="container">
-        <h1>Lista de Tareas</h1>
-        <form id="task-form">
-            <input type="text" id="task" placeholder="Nueva tarea" required>
-            <button type="submit">Añadir</button>
-        </form>
-        <ul id="task-list">
-            <!-- Tareas dinámicas -->
-        </ul>
-    </div>
-    <script src="https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.8.1/firebase-database.js"></script>
-    <script src="script.js"></script>
+  <div class="container">
+    <h4>Registrate</h4>
+    <input type="email" id="email" placeholder="Ingresa tu email" />
+    <input type="password" id="contrasena" placeholder="Ingresa tu contraseña" />
+    <button onclick="registrar()">Registrarse</button>
+  
+
+
+  <h4>Ingresa</h4>
+  <input type="email" id="email2" placeholder="Ingresa tu email" />
+  <input type="password" id="contrasena2" placeholder="Ingresa tu contraseña" />
+  <button onclick="ingresar()">Ingresa</button>
+  </div>
+  <script type="module" src="script.js"></script>
+
 </body>
+
 </html>
