@@ -7,12 +7,11 @@ import {
   onAuthStateChanged,
   signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyDQm8eAFcn7cFItpRniQrukTIwbJsc1XbE",
@@ -29,16 +28,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-try {
-  const docRef = await addDoc(collection(db, "users"), {
-    first: "Ada",
-    last: "Lovelace",
-    born: 1815
-  });
-  console.log("Document written with ID: ", docRef.id);
-} catch (e) {
-  console.error("Error adding document: ", e);
-}
+
+
+
 
 window.registrar = async function () {
   const email = document.getElementById("email").value;
@@ -107,18 +99,10 @@ window.cerrar = async function () {
   }
 }
 
-function errar(){
-  signOut(auth).then(() => {
-    console.log('se ha cerrado la sesion')
-    // Sign-out successful.
-  }).catch((error) => {
-    console.log(error)
-    // An error happened.
-  });
-}
-
-
-
+const querySnapshot = await getDocs(collection(db, "tasks"));
+querySnapshot.forEach((doc) => {
+  console.log(`${doc.id} => ${doc.data().first}`);
+});
 
 document.addEventListener('DOMContentLoaded', () => {
   const taskForm = document.getElementById('task-form');
@@ -127,16 +111,26 @@ document.addEventListener('DOMContentLoaded', () => {
   taskForm.addEventListener('submit', addTask);
   taskList.addEventListener('click', handleTaskActions);
 
-  function addTask(event) {
+  async function addTask(event) {
       event.preventDefault();
       const taskInput = document.getElementById('new-task');
       const taskText = taskInput.value.trim();
-
-      if (taskText !== '') {
+      try {
+        const docRef = await addDoc(collection(db, "tasks"), {
+          tarea: `${taskText}`,
+          completada: false
+        });
+        console.log("Document written with ID: ", docRef.id);
+        if (taskText !== '') {
           const taskItem = createTaskItem(taskText);
           taskList.appendChild(taskItem);
           taskInput.value = '';
       }
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+
+      
   }
 
   function createTaskItem(text) {
