@@ -5,9 +5,17 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  signOut
+  signOut,
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  updateDoc,
+  deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 // Your web app's Firebase configuration
@@ -28,10 +36,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-
-
-
-
 window.registrar = async function () {
   const email = document.getElementById("email").value;
   const password = document.getElementById("contrasena").value;
@@ -48,7 +52,6 @@ window.registrar = async function () {
     console.error("Error en el registro:", error.message);
   }
 };
-
 
 window.ingresar = async function () {
   const email = document.getElementById("email2").value;
@@ -68,112 +71,142 @@ window.ingresar = async function () {
   }
 };
 
-function observador () {
+function observador() {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log('hay un usuario activo')
+      console.log("hay un usuario activo");
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
       const uid = user.uid;
       // ...
     } else {
       //window.location.href = "/index.html"
-      console.log ('no hay un usuario activo')
+      console.log("no hay un usuario activo");
       // User is signed out
       // ...
     }
   });
 }
 
-
-  observador();
-
+observador();
 
 window.cerrar = async function () {
-  try{
-    signOut(auth)
+  try {
+    signOut(auth);
 
-    window.location.href = "/index.html"
-  }catch(error){
-    console.log(error)
+    window.location.href = "/index.html";
+  } catch (error) {
+    console.log(error);
   }
-}
+};
 
-const querySnapshot = await getDocs(collection(db, "tasks"));
-querySnapshot.forEach((doc) => {
-  console.log(`${doc.id} => ${doc.data().first}`);
-});
 
-document.addEventListener('DOMContentLoaded', () => {
-  const taskForm = document.getElementById('task-form');
-  const taskList = document.getElementById('task-list');
 
-  taskForm.addEventListener('submit', addTask);
-  taskList.addEventListener('click', handleTaskActions);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const taskForm = document.getElementById("task-form");
+  const taskList = document.getElementById("task-list");
+
+  taskForm.addEventListener("submit", addTask);
+  taskList.addEventListener("click", handleTaskActions);
 
   async function addTask(event) {
-      event.preventDefault();
-      const taskInput = document.getElementById('new-task');
-      const taskText = taskInput.value.trim();
-      try {
-        const docRef = await addDoc(collection(db, "tasks"), {
-          tarea: `${taskText}`,
-          completada: false
-        });
-        console.log("Document written with ID: ", docRef.id);
-        if (taskText !== '') {
-          const taskItem = createTaskItem(taskText);
-          taskList.appendChild(taskItem);
-          taskInput.value = '';
+    event.preventDefault();
+    const taskInput = document.getElementById("new-task");
+    const taskText = taskInput.value.trim();
+    try {
+      const docRef = await addDoc(collection(db, "tasks"), {
+        tarea: `${taskText}`,
+        completada: false,
+      });
+      console.log("Document written with ID: ", docRef.id);
+      if (taskText !== "") {
+        const taskItem = createTaskItem(taskText);
+        taskList.appendChild(taskItem);
+        taskInput.value = "";
       }
-      } catch (e) {
-        console.error("Error adding document: ", e);
-      }
-
-      
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   }
 
-  function createTaskItem(text) {
-      const li = document.createElement('li');
-      const span = document.createElement('span');
-      span.textContent = text;
+  async function mostar() {
+    const querySnapshot = await getDocs(collection(db, "tasks"));
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => ${doc.data().tarea} | ${doc.data().completada}`);
+      const taskText = doc.data().tarea;
+      const completada = doc.data().completada;
+      const taskItem = createTaskItem(taskText, completada, doc.id);
+      taskList.appendChild(taskItem); // Asegúrate de que los elementos se añadan al DOM
+    });
+  }
 
-      const actionsDiv = document.createElement('div');
-      actionsDiv.classList.add('actions');
+  mostar();
 
-      const editButton = document.createElement('button');
-      editButton.textContent = 'Editar';
-      editButton.classList.add('edit');
+  function createTaskItem(text, completada, id) {
+    const li = document.createElement("li");
+    const span = document.createElement("span");
+    const checkbox = document.createElement("input");
 
-      const deleteButton = document.createElement('button');
-      deleteButton.textContent = 'Eliminar';
+    checkbox.type = "checkbox";
+    checkbox.checked = completada;
+    checkbox.addEventListener("change", async () => {
+      try {
+        const taskDoc = doc(db, "tasks", id);
+        await updateDoc(taskDoc, {
+          completada: checkbox.checked
+        });
+        console.log("Document updated with ID: ", id);
+      } catch (e) {
+        console.error("Error updating document: ", e);
+      }
+    });
+    span.textContent = text;
 
-      actionsDiv.appendChild(editButton);
-      actionsDiv.appendChild(deleteButton);
+    const actionsDiv = document.createElement("div");
+    actionsDiv.classList.add("actions");
 
-      li.appendChild(span);
-      li.appendChild(actionsDiv);
+    const editButton = document.createElement("button");
+    editButton.textContent = "Editar";
+    editButton.classList.add("edit");
 
-      return li;
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Eliminar";
+
+    actionsDiv.appendChild(editButton);
+    actionsDiv.appendChild(deleteButton);
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    li.appendChild(actionsDiv);
+    
+
+    return li;
   }
 
   function handleTaskActions(event) {
-      const target = event.target;
+    const target = event.target;
 
-      if (target.textContent === 'Eliminar') {
-          const taskItem = target.closest('li');
-          taskList.removeChild(taskItem);
-      } else if (target.textContent === 'Editar') {
-          const taskItem = target.closest('li');
-          const span = taskItem.querySelector('span');
-          const newTaskText = prompt('Editar tarea:', span.textContent);
+    if (target.textContent === "Eliminar") {
+      const taskItem = target.closest("li");
+      target.addEventListener("onclick", async () => {
+        try {
+          const taskDoc = doc(db, "tasks", id);
+          await deleteDoc(taskDoc);
+          console.log("Document deleted with ID: ", id);
+        } catch (e) {
+          console.error("Error deleting document: ", e);
+        }
+      });
+      taskList.removeChild(taskItem);
+    } else if (target.textContent === "Editar") {
+      const taskItem = target.closest("li");
+      const span = taskItem.querySelector("span");
+      const newTaskText = prompt("Editar tarea:", span.textContent);
 
-          if (newTaskText !== null) {
-              span.textContent = newTaskText.trim();
-          }
+      if (newTaskText !== null) {
+        span.textContent = newTaskText.trim();
       }
+    }
   }
 });
-
-
-
