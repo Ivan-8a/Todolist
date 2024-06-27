@@ -91,7 +91,7 @@ window.cerrar = async function () {
   try {
     signOut(auth);
 
-    window.location.href = "/index.html";
+    window.location.href = "/Todolist/index.html";
   } catch (error) {
     console.log(error);
   }
