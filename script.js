@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const taskItem = createTaskItem(taskText, false, docRef.id);
         taskList.appendChild(taskItem);
         taskInput.value = "";
+        location.reload();
       }
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -214,3 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+
+setInterval(function() {
+  location.reload();
+}, 60 * 1000);

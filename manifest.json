@@ -1,0 +1,55 @@
+{
+  "background_color": "#ced1f3",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "TODOLIST-APP",
+  "orientation": "any",
+  "scope": "/https://ivan-8a.github.io/Todolist/index.html",
+  "short_name": "TODOLISTPOP",
+  "start_url": "/https://ivan-8a.github.io/Todolist/index.html",
+  "theme_color": "#ffffff",
+  "description": "PWA con funcionamiento offline y conectada a una base de datos firebase",
+  "lang": "es",
+  "categories": [
+    "productivity"
+  ],
+  "icons": [
+  {
+    "src": "assets/icon48",
+    "sizes": "48x48",
+    "type": "image/webp"
+  },
+
+  {
+    "src": "assets/icon72",
+    "sizes": "72x72",
+    "type": "image/webp"
+  },
+
+  {
+    "src": "assets/icon96",
+    "sizes": "96x96",
+    "type": "image/webp"
+  },
+
+  {
+    "src": "assets/icon144",
+    "sizes": "144x144",
+    "type": "image/webp"
+  },
+
+  {
+    "src": "assets/icon256",
+    "sizes": "256x256",
+    "type": "image/webp"
+  },
+
+  {
+    "src": "assets/icon512",
+    "sizes": "512x512",
+    "type": "image/webp"
+  }
+  
+]
+  
+}
