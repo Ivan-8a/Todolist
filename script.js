@@ -62,7 +62,7 @@ window.ingresar = async function () {
     );
     const user = userCredential.user;
     console.log("Usuario logueado:", user);
-    window.location.href = "/todolist.html";
+    window.location.href = "/Todolist/todolist.html";
   } catch (error) {
     console.error("Error en el inicio de sesión:", error.message);
   }
