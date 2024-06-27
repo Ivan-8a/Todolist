@@ -16,11 +16,8 @@ import {
   updateDoc,
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDQm8eAFcn7cFItpRniQrukTIwbJsc1XbE",
   authDomain: "todolist1-89dd1.firebaseapp.com",
@@ -100,9 +97,6 @@ window.cerrar = async function () {
   }
 };
 
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const taskForm = document.getElementById("task-form");
   const taskList = document.getElementById("task-list");
@@ -121,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       console.log("Document written with ID: ", docRef.id);
       if (taskText !== "") {
-        const taskItem = createTaskItem(taskText);
+        const taskItem = createTaskItem(taskText, false, docRef.id);
         taskList.appendChild(taskItem);
         taskInput.value = "";
       }
@@ -130,21 +124,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function mostar() {
+  async function mostrar() {
     const querySnapshot = await getDocs(collection(db, "tasks"));
     querySnapshot.forEach((doc) => {
       console.log(`${doc.id} => ${doc.data().tarea} | ${doc.data().completada}`);
       const taskText = doc.data().tarea;
       const completada = doc.data().completada;
       const taskItem = createTaskItem(taskText, completada, doc.id);
-      taskList.appendChild(taskItem); // Asegúrate de que los elementos se añadan al DOM
+      taskList.appendChild(taskItem);
     });
   }
 
-  mostar();
+  mostrar();
 
   function createTaskItem(text, completada, id) {
     const li = document.createElement("li");
+    li.setAttribute("data-id", id); // Store the document ID in a data attribute
     const span = document.createElement("span");
     const checkbox = document.createElement("input");
 
@@ -179,33 +174,42 @@ document.addEventListener("DOMContentLoaded", () => {
     li.appendChild(checkbox);
     li.appendChild(span);
     li.appendChild(actionsDiv);
-    
 
     return li;
   }
 
-  function handleTaskActions(event) {
+  async function handleTaskActions(event) {
     const target = event.target;
 
     if (target.textContent === "Eliminar") {
       const taskItem = target.closest("li");
-      target.addEventListener("onclick", async () => {
-        try {
-          const taskDoc = doc(db, "tasks", id);
-          await deleteDoc(taskDoc);
-          console.log("Document deleted with ID: ", id);
-        } catch (e) {
-          console.error("Error deleting document: ", e);
-        }
-      });
-      taskList.removeChild(taskItem);
+      const id = taskItem.getAttribute("data-id"); // Retrieve the document ID from the data attribute
+
+      try {
+        const taskDoc = doc(db, "tasks", id);
+        await deleteDoc(taskDoc);
+        console.log("Document deleted with ID: ", id);
+        taskList.removeChild(taskItem); // Remove the task item from the DOM
+      } catch (e) {
+        console.error("Error deleting document: ", e);
+      }
     } else if (target.textContent === "Editar") {
       const taskItem = target.closest("li");
       const span = taskItem.querySelector("span");
+      const id = taskItem.getAttribute("data-id"); // Retrieve the document ID from the data attribute
       const newTaskText = prompt("Editar tarea:", span.textContent);
 
       if (newTaskText !== null) {
-        span.textContent = newTaskText.trim();
+        try {
+          const taskDoc = doc(db, "tasks", id);
+          await updateDoc(taskDoc, {
+            tarea: newTaskText.trim()
+          });
+          span.textContent = newTaskText.trim();
+          console.log("Document updated with ID: ", id);
+        } catch (e) {
+          console.error("Error updating document: ", e);
+        }
       }
     }
   }
