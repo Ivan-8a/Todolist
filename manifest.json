@@ -15,39 +15,39 @@
   ],
   "icons": [
   {
-    "src": "assets/icon48",
+    "src": "assets/icon48.png",
     "sizes": "48x48",
-    "type": "image/webp"
+    "type": "image/png"
   },
 
   {
-    "src": "assets/icon72",
+    "src": "assets/icon72.png",
     "sizes": "72x72",
-    "type": "image/webp"
+    "type": "image/png"
   },
 
   {
-    "src": "assets/icon96",
+    "src": "assets/icon96.png",
     "sizes": "96x96",
-    "type": "image/webp"
+    "type": "image/png"
   },
 
   {
-    "src": "assets/icon144",
+    "src": "assets/icon144.png",
     "sizes": "144x144",
-    "type": "image/webp"
+    "type": "image/png"
   },
 
   {
-    "src": "assets/icon256",
+    "src": "assets/icon256.png",
     "sizes": "256x256",
-    "type": "image/webp"
+    "type": "image/png"
   },
 
   {
-    "src": "assets/icon512",
+    "src": "assets/icon512.png",
     "sizes": "512x512",
-    "type": "image/webp"
+    "type": "image/png"
   }
   
 ]
